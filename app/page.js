@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ProfileCard from "./components/ProfileCard";
 
 export default function Home() {
   return (
@@ -12,23 +13,10 @@ export default function Home() {
       </div>
 
       {/*
-        This is the profile card. Once the user is logged in, it should show
-        their email and their address (street and city only). For now there is
-        no user anywhere, so we show the logged-out state.
-
-        Reading the user means reading your context, which means this part has
-        to become a Client Component. Building that piece is your job.
+        ProfileCard is a Client Component that reads the user from context.
+        The rest of this page stays a Server Component.
       */}
-      <section className="rounded-2xl border border-zinc-200 bg-white p-6">
-        <h2 className="text-lg font-medium">Your profile</h2>
-        <p className="mt-2 text-sm text-zinc-600">
-          You are not logged in.{" "}
-          <Link href="/login" className="font-medium text-zinc-900 underline">
-            Log in
-          </Link>{" "}
-          to see your details here.
-        </p>
-      </section>
+      <ProfileCard />
     </main>
   );
 }
