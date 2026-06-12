@@ -2,23 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/context/UserContext";
 
 export default function LoginPage() {
   const [id, setId] = useState("");
   const router = useRouter();
+  const { login, isLoading, error } = useUser();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    // This is the whole point of the lab.
-    // Logging in should hand the ID to your user context, which fetches that
-    // user from the API and stores them in state. There is no context yet, so
-    // login() does not exist and this line throws. Building it is your job.
-    await login(id);
+    const success = await login(id);
 
-    // Once login actually works, send them back to the home page so the navbar
-    // and the profile card can show who they are.
-    router.push("/");
+    if (success) {
+      router.push("/");
+    }
   }
 
   return (
@@ -45,11 +43,18 @@ export default function LoginPage() {
           />
         </label>
 
+        {error ? (
+          <p className="text-sm text-red-600" role="alert">
+            {error}
+          </p>
+        ) : null}
+
         <button
           type="submit"
-          className="rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          disabled={isLoading}
+          className="rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Log in
+          {isLoading ? "Logging in…" : "Log in"}
         </button>
       </form>
     </main>
