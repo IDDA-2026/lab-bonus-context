@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import { UserProvider } from "./context/UserContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +30,10 @@ export default function RootLayout({ children }) {
         could read the user? (Hint: it would wrap {children}, and the Navbar too.)
       */}
       <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-900">
-        <Navbar />
-        {children}
+        <UserProvider>
+          <Navbar />
+          {children}
+        </UserProvider>
       </body>
     </html>
   );

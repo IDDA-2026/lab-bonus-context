@@ -2,19 +2,18 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "../context/UserContext";
 
 export default function LoginPage() {
   const [id, setId] = useState("");
   const router = useRouter();
+  const { login } = useUser();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    // This is the whole point of the lab.
-    // Logging in should hand the ID to your user context, which fetches that
-    // user from the API and stores them in state. There is no context yet, so
-    // login() does not exist and this line throws. Building it is your job.
-    await login(id);
+    // Call the provider's login function which fetches and stores the user.
+    await login(Number(id));
 
     // Once login actually works, send them back to the home page so the navbar
     // and the profile card can show who they are.
