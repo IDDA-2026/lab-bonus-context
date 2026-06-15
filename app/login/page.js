@@ -2,23 +2,23 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "../context/UserContext";
 
 export default function LoginPage() {
   const [id, setId] = useState("");
-  const router = useRouter();
+  const { login, loading, error } = useUser(); 
+    const router = useRouter();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    // This is the whole point of the lab.
-    // Logging in should hand the ID to your user context, which fetches that
-    // user from the API and stores them in state. There is no context yet, so
-    // login() does not exist and this line throws. Building it is your job.
-    await login(id);
+    if (!id) return;
 
-    // Once login actually works, send them back to the home page so the navbar
-    // and the profile card can show who they are.
-    router.push("/");
+    const success = await login(id);
+
+    if (success) {
+      router.push("/");
+    }
   }
 
   return (
@@ -37,19 +37,24 @@ export default function LoginPage() {
           <input
             type="number"
             min="1"
+            max="10"
             value={id}
             onChange={(e) => setId(e.target.value)}
             placeholder="e.g. 1"
             className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base outline-none focus:border-zinc-900"
             required
-          />
+            disabled={loading}
+                      />
         </label>
+
+        {error && <p className="text-sm text-red-600 font-medium">{error}</p>}
 
         <button
           type="submit"
-          className="rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          disabled={loading}
+          className="rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
         >
-          Log in
+          {loading ? "Logging in..." : "Log in"}
         </button>
       </form>
     </main>
