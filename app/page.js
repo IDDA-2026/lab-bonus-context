@@ -1,34 +1,42 @@
 import Link from "next/link";
-
+import { useUser } from "../context/UserContext";
+import { useRouter } from "next/navigation";
 export default function Home() {
+  const { user } = useUser();
+
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-6 py-16">
-      <div className="flex flex-col gap-3">
-        <h1 className="text-3xl font-semibold tracking-tight">Welcome back</h1>
-        <p className="max-w-md text-base text-zinc-600">
-          This little app wants to greet you by name and show your details. The
-          trouble is, it has no idea who you are yet.
-        </p>
-      </div>
-
-      {/*
-        This is the profile card. Once the user is logged in, it should show
-        their email and their address (street and city only). For now there is
-        no user anywhere, so we show the logged-out state.
-
-        Reading the user means reading your context, which means this part has
-        to become a Client Component. Building that piece is your job.
-      */}
+    <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-6 py-16">
       <section className="rounded-2xl border border-zinc-200 bg-white p-6">
         <h2 className="text-lg font-medium">Your profile</h2>
-        <p className="mt-2 text-sm text-zinc-600">
-          You are not logged in.{" "}
-          <Link href="/login" className="font-medium text-zinc-900 underline">
-            Log in
-          </Link>{" "}
-          to see your details here.
-        </p>
+        {user ? (
+          <div className="mt-2 text-sm text-zinc-600">
+            <p>Email: {user.email}</p>
+            <p>Address: {user.address.street}, {user.address.city}</p>
+          </div>
+        ) : (
+          <p className="mt-2 text-sm text-zinc-600">
+            You are not logged in. <a href="/login" className="font-medium underline">Log in</a>
+          </p>
+        )}
       </section>
     </main>
+  );
+}
+export default function LoginPage() {
+  const { login } = useUser();
+  const router = useRouter();
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const id = e.target.userId.value;
+    const success = await login(id);
+    if (success) router.push("/");
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="p-6">
+      <input name="userId" type="number" className="border p-2" placeholder="User ID (1-10)" />
+      <button type="submit" className="bg-black text-white p-2">Log in</button>
+    </form>
   );
 }
