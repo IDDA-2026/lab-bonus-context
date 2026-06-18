@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "../context/UserContext";
 
 export default function LoginPage() {
   const [id, setId] = useState("");
   const router = useRouter();
+  const { login } = useUser();
 
   async function handleSubmit(e) {
     e.preventDefault();
