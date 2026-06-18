@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useUser } from "./context/UserContext";
 
 export default function Home() {
+  const { user } = useUser();
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-6 py-16">
       <div className="flex flex-col gap-3">
@@ -21,13 +26,24 @@ export default function Home() {
       */}
       <section className="rounded-2xl border border-zinc-200 bg-white p-6">
         <h2 className="text-lg font-medium">Your profile</h2>
-        <p className="mt-2 text-sm text-zinc-600">
-          You are not logged in.{" "}
-          <Link href="/login" className="font-medium text-zinc-900 underline">
-            Log in
-          </Link>{" "}
-          to see your details here.
-        </p>
+        {user ? (
+          <div className="mt-4 space-y-2">
+            <p className="text-sm text-zinc-600">
+              <span className="font-medium text-zinc-900">Email:</span> {user.email}
+            </p>
+            <p className="text-sm text-zinc-600">
+              <span className="font-medium text-zinc-900">Address:</span> {user.address.street}, {user.address.city}
+            </p>
+          </div>
+        ) : (
+          <p className="mt-2 text-sm text-zinc-600">
+            You are not logged in.{" "}
+            <Link href="/login" className="font-medium text-zinc-900 underline">
+              Log in
+            </Link>{" "}
+            to see your details here.
+          </p>
+        )}
       </section>
     </main>
   );
